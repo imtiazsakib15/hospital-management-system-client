@@ -4,6 +4,7 @@ import Home from "../pages/home/Home";
 import Patients from "../pages/patients/Patients";
 import Doctors from "../pages/doctors/Doctors";
 import Hospitals from "../pages/hospitals/Hospitals";
+import Specializations from "../pages/hospitals/Hospitals";
 
 export const router = createBrowserRouter([
   {
@@ -27,8 +28,8 @@ export const router = createBrowserRouter([
         element: <Hospitals />,
       },
       {
-        path: "/patients",
-        element: <Patients />,
+        path: "/specializations",
+        element: <Specializations />,
       },
     ],
   },
