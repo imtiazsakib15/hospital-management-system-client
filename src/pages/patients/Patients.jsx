@@ -7,7 +7,8 @@ const Patients = () => {
     const phoneNo = e.target.phoneNo.value;
 
     const patientInfo = {
-      id: name,
+      id: "",
+      name,
       email,
       address,
       phoneNo,
