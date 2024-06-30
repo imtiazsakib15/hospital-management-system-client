@@ -1,10 +1,12 @@
+import { Link } from "react-router-dom";
+
 const Navbar = () => {
   return (
     <div className="text-lg flex justify-end gap-12 px-5 py-4 border-b">
-      <a href="/patients">Patients</a>
-      <a href="/doctors">Doctors</a>
-      <a href="/hospitals">Hospitals</a>
-      <a href="/specializations">Specializations</a>
+      <Link to="/patients">Patients</Link>
+      <Link to="/doctors">Doctors</Link>
+      <Link to="/hospitals">Hospitals</Link>
+      <Link to="/specializations">Specializations</Link>
     </div>
   );
 };
