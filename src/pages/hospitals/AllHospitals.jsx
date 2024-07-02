@@ -2,9 +2,20 @@ import Container from "../../components/Container";
 import useGetAllHospitals from "../../hooks/useGetAllHospitals";
 import Edit from "../../icons/Edit";
 import Delete from "../../icons/Delete";
+import axios from "axios";
 
 const AllHospitals = () => {
-  const { hospitals } = useGetAllHospitals();
+  const { hospitals, refetchHospitals } = useGetAllHospitals();
+
+  const handleDelete = async (id) => {
+    const result = await axios.delete(
+      `https://hospital-server-seven.vercel.app/api/v1/hospitals/${id}`
+    );
+    if (result?.data?.success) {
+      refetchHospitals();
+      alert("Hospital info deleted!");
+    }
+  };
 
   return (
     <div className="pt-4">
@@ -27,7 +38,7 @@ const AllHospitals = () => {
                 <td>{hospital?.address}</td>
                 <td className="flex justify-center gap-3 py-1.5">
                   <Edit />
-                  <span>
+                  <span onClick={() => handleDelete(hospital?.id)}>
                     <Delete />
                   </span>
                 </td>
