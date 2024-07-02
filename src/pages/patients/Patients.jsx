@@ -1,20 +1,24 @@
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+
 const Patients = () => {
+  const mutation = useMutation({
+    mutationFn: (newPatient) => {
+      return axios.post(
+        "https://hospital-server-seven.vercel.app/api/v1/patients/create-patient",
+        newPatient
+      );
+    },
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const name = e.target.name.value;
-    const email = e.target.email.value;
-    const address = e.target.address.value;
-    const phoneNo = e.target.phoneNo.value;
+    const formData = new FormData(e.target);
+    const patient = Object.fromEntries(formData);
 
-    const patientInfo = {
-      id: "",
-      name,
-      email,
-      address,
-      phoneNo,
-    };
-    console.log(patientInfo);
+    mutation.mutate({ patient });
   };
+
   return (
     <div className="py-6">
       <h1 className="text-3xl font-bold text-center">Add Patients Details</h1>
@@ -29,21 +33,21 @@ const Patients = () => {
           />
         </div>
         <div className="grid grid-cols-5 items-center">
-          <label htmlFor="email">Email:</label>
-          <input
-            className="border col-span-4 px-2 py-1"
-            type="text"
-            name="email"
-            id="email"
-          />
-        </div>
-        <div className="grid grid-cols-5 items-center">
           <label htmlFor="address">Address:</label>
           <input
             className="border col-span-4 px-2 py-1"
             type="text"
             name="address"
             id="address"
+          />
+        </div>
+        <div className="grid grid-cols-5 items-center">
+          <label htmlFor="email">Email:</label>
+          <input
+            className="border col-span-4 px-2 py-1"
+            type="text"
+            name="email"
+            id="email"
           />
         </div>
         <div className="grid grid-cols-5 items-center pb-3">
