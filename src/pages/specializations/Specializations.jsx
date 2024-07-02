@@ -1,8 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import AllSpecializations from "./AllSpecializations";
+import useGetAllSpecializations from "../../hooks/useGetAllSpecializations";
 
 const Specializations = () => {
-  const mutation = useMutation({
+  const { refetchSpecializations } = useGetAllSpecializations();
+
+  const addNewSpecialization = useMutation({
     mutationFn: (newSpecialization) => {
       return axios.post(
         "https://hospital-server-seven.vercel.app/api/v1/specializations/create-specialization",
@@ -16,7 +20,18 @@ const Specializations = () => {
     const formData = new FormData(e.target);
     const specialization = Object.fromEntries(formData);
 
-    mutation.mutate({ specialization });
+    addNewSpecialization.mutate(
+      { specialization },
+      {
+        onSuccess: async (result) => {
+          if (result?.data?.success) {
+            await refetchSpecializations();
+            e.target.reset();
+            alert("Specialization info saved!");
+          }
+        },
+      }
+    );
   };
 
   return (
@@ -41,6 +56,8 @@ const Specializations = () => {
           Add Specialization
         </button>
       </form>
+
+      <AllSpecializations />
     </div>
   );
 };
