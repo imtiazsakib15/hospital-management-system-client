@@ -1,38 +1,54 @@
-const Specializations = () => {
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+
+const Hospitals = () => {
+  const mutation = useMutation({
+    mutationFn: (newHospital) => {
+      return axios.post(
+        "https://hospital-server-seven.vercel.app/api/v1/hospitals/create-hospital",
+        newHospital
+      );
+    },
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const name = e.target.name.value;
+    const formData = new FormData(e.target);
+    const hospital = Object.fromEntries(formData);
 
-    const specializationInfo = {
-      id: "",
-      name,
-    };
-    console.log(specializationInfo);
+    mutation.mutate({ hospital });
   };
   return (
     <div className="py-6">
-      <h1 className="text-3xl font-bold text-center">
-        Add Specializations Details
-      </h1>
+      <h1 className="text-3xl font-bold text-center">Add Hospital Details</h1>
       <form onSubmit={handleSubmit} className="w-96 mx-auto py-6 space-y-3">
-        <div className="grid grid-cols-5 items-center">
-          <label htmlFor="name">Name:</label>
+        <div className="grid grid-cols-3 items-center">
+          <label htmlFor="hospitalName">Hospital Name:</label>
           <input
-            className="border col-span-4 px-2 py-1"
+            className="border col-span-2 px-2 py-1"
             type="text"
-            name="name"
-            id="name"
+            name="hospitalName"
+            id="hospitalName"
+          />
+        </div>
+        <div className="grid grid-cols-3 items-center">
+          <label htmlFor="address">Address:</label>
+          <input
+            className="border col-span-2 px-2 py-1"
+            type="text"
+            name="address"
+            id="address"
           />
         </div>
         <button
           className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium"
           type="submit"
         >
-          Add Specialization
+          Add Hospital
         </button>
       </form>
     </div>
   );
 };
 
-export default Specializations;
+export default Hospitals;
