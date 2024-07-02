@@ -1,16 +1,24 @@
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+
 const Specializations = () => {
+  const mutation = useMutation({
+    mutationFn: (newSpecialization) => {
+      return axios.post(
+        "https://hospital-server-seven.vercel.app/api/v1/specializations/create-specialization",
+        newSpecialization
+      );
+    },
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const name = e.target.name.value;
-    const address = e.target.address.value;
+    const formData = new FormData(e.target);
+    const specialization = Object.fromEntries(formData);
 
-    const hospitalInfo = {
-      id: "",
-      name,
-      address,
-    };
-    console.log(hospitalInfo);
+    mutation.mutate({ specialization });
   };
+
   return (
     <div className="py-6">
       <h1 className="text-3xl font-bold text-center">
