@@ -2,10 +2,13 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import useGetAllHospitals from "../../hooks/useGetAllHospitals";
 import useGetAllSpecializations from "../../hooks/useGetAllSpecializations";
+import AllDoctors from "./AllDoctors";
+import useGetAllDoctors from "../../hooks/useGetAllDoctors";
 
 const Doctors = () => {
-  const hospitals = useGetAllHospitals();
-  const specializations = useGetAllSpecializations();
+  const { hospitals } = useGetAllHospitals();
+  const { specializations } = useGetAllSpecializations();
+  const { refetchDoctors } = useGetAllDoctors();
 
   const addNewDoctor = useMutation({
     mutationFn: (newDoctor) => {
@@ -24,8 +27,11 @@ const Doctors = () => {
     addNewDoctor.mutate(
       { doctor },
       {
-        onSuccess: (result) => {
-          if (result?.data?.success) alert("Doctor info saved!");
+        onSuccess: async (result) => {
+          if (result?.data?.success) {
+            await refetchDoctors();
+            alert("Doctor info saved!");
+          }
         },
       }
     );
@@ -64,16 +70,16 @@ const Doctors = () => {
         </div>
 
         <div className="grid grid-cols-3 items-center">
-          <label htmlFor="hospitalId">Hospital:</label>
+          <label htmlFor="hospital">Hospital:</label>
           <select
             className="border col-span-2 px-2 py-1"
-            name="hospitalId"
-            id="hospitalId"
+            name="hospital"
+            id="hospital"
             required
           >
             <option></option>
             {hospitals?.map((hospital) => (
-              <option key={hospital.id} value={hospital.id}>
+              <option key={hospital._id} value={hospital._id}>
                 {hospital.hospitalName}
               </option>
             ))}
@@ -81,16 +87,16 @@ const Doctors = () => {
         </div>
 
         <div className="grid grid-cols-3 items-center pb-3">
-          <label htmlFor="specializationId">Specialized At:</label>
+          <label htmlFor="specialization">Specialized At:</label>
           <select
             className="border col-span-2 px-2 py-1"
-            name="specializationId"
-            id="specializationId"
+            name="specialization"
+            id="specialization"
             required
           >
             <option></option>
             {specializations?.map((specialization) => (
-              <option key={specialization.id} value={specialization.id}>
+              <option key={specialization._id} value={specialization._id}>
                 {specialization.specialization}
               </option>
             ))}
@@ -104,6 +110,8 @@ const Doctors = () => {
           Add Doctor
         </button>
       </form>
+
+      <AllDoctors />
     </div>
   );
 };
