@@ -1,8 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import AllHospitals from "./AllHospitals";
+import useGetAllHospitals from "../../hooks/useGetAllHospitals";
 
 const Hospitals = () => {
-  const mutation = useMutation({
+  const { refetchHospitals } = useGetAllHospitals();
+
+  const addNewHospital = useMutation({
     mutationFn: (newHospital) => {
       return axios.post(
         "https://hospital-server-seven.vercel.app/api/v1/hospitals/create-hospital",
@@ -16,7 +20,18 @@ const Hospitals = () => {
     const formData = new FormData(e.target);
     const hospital = Object.fromEntries(formData);
 
-    mutation.mutate({ hospital });
+    addNewHospital.mutate(
+      { hospital },
+      {
+        onSuccess: async (result) => {
+          if (result?.data?.success) {
+            await refetchHospitals();
+            e.target.reset();
+            alert("Hospital info saved!");
+          }
+        },
+      }
+    );
   };
   return (
     <div className="py-6">
@@ -47,6 +62,8 @@ const Hospitals = () => {
           Add Hospital
         </button>
       </form>
+
+      <AllHospitals />
     </div>
   );
 };
