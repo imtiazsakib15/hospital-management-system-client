@@ -2,9 +2,21 @@ import Container from "../../components/Container";
 import useGetAllSpecializations from "../../hooks/useGetAllSpecializations";
 import Edit from "../../icons/Edit";
 import Delete from "../../icons/Delete";
+import axios from "axios";
 
 const AllSpecializations = () => {
-  const { specializations } = useGetAllSpecializations();
+  const { specializations, refetchSpecializations } =
+    useGetAllSpecializations();
+
+  const handleDelete = async (id) => {
+    const result = await axios.delete(
+      `https://hospital-server-seven.vercel.app/api/v1/specializations/${id}`
+    );
+    if (result?.data?.success) {
+      refetchSpecializations();
+      alert("Specialization info deleted!");
+    }
+  };
 
   return (
     <div className="pt-4">
@@ -27,7 +39,7 @@ const AllSpecializations = () => {
                 <td>{specialization?.specialization}</td>
                 <td className="flex justify-center gap-3 py-1.5">
                   <Edit />
-                  <span>
+                  <span onClick={() => handleDelete(specialization?.id)}>
                     <Delete />
                   </span>
                 </td>
