@@ -8,6 +8,7 @@ import Specializations from "../pages/specializations/Specializations";
 import UpdatePatient from "../pages/patients/UpdatePatient";
 import UpdateHospital from "../pages/hospitals/UpdateHospital";
 import UpdateSpecialization from "../pages/specializations/UpdateSpecialization";
+import UpdateDoctor from "../pages/doctors/UpdateDoctor";
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ export const router = createBrowserRouter([
       {
         path: "/doctors",
         element: <Doctors />,
+      },
+      {
+        path: "/doctors/:id",
+        element: <UpdateDoctor />,
       },
       {
         path: "/hospitals",

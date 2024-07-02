@@ -36,8 +36,8 @@ const UpdatePatient = () => {
       {
         onSuccess: async (result) => {
           if (result?.data?.success) {
-            refetchPatients();
-            refetchSinglePatient();
+            await refetchPatients();
+            await refetchSinglePatient();
             navigate("/patients");
             alert("Patient info updated!");
           }
