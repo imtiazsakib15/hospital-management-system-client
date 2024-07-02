@@ -3,9 +3,11 @@ import useGetAllPatients from "../../hooks/useGetAllPatients";
 import Edit from "../../icons/Edit";
 import Delete from "../../icons/Delete";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AllPatients = () => {
   const { patients, refetchPatients } = useGetAllPatients();
+  const navigate = useNavigate();
 
   const handleDelete = async (id) => {
     const result = await axios.delete(
@@ -41,7 +43,9 @@ const AllPatients = () => {
                 <td>{patient?.email}</td>
                 <td>{patient?.phoneNo}</td>
                 <td className="flex justify-center gap-3 py-1.5">
-                  <Edit />
+                  <span onClick={() => navigate(`/patients/${patient?.id}`)}>
+                    <Edit />
+                  </span>
                   <span onClick={() => handleDelete(patient?.id)}>
                     <Delete />
                   </span>
