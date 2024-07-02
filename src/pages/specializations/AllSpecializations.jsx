@@ -3,10 +3,12 @@ import useGetAllSpecializations from "../../hooks/useGetAllSpecializations";
 import Edit from "../../icons/Edit";
 import Delete from "../../icons/Delete";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AllSpecializations = () => {
   const { specializations, refetchSpecializations } =
     useGetAllSpecializations();
+  const navigate = useNavigate();
 
   const handleDelete = async (id) => {
     const result = await axios.delete(
@@ -38,7 +40,13 @@ const AllSpecializations = () => {
                 <td className="px-4 py-1.5">{specialization?.id}</td>
                 <td>{specialization?.specialization}</td>
                 <td className="flex justify-center gap-3 py-1.5">
-                  <Edit />
+                  <span
+                    onClick={() =>
+                      navigate(`/specializations/${specialization?.id}`)
+                    }
+                  >
+                    <Edit />
+                  </span>
                   <span onClick={() => handleDelete(specialization?.id)}>
                     <Delete />
                   </span>
