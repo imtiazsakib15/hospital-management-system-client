@@ -30,6 +30,7 @@ const Doctors = () => {
         onSuccess: async (result) => {
           if (result?.data?.success) {
             await refetchDoctors();
+            e.target.reset();
             alert("Doctor info saved!");
           }
         },

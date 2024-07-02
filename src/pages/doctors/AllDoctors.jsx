@@ -2,10 +2,20 @@ import Container from "../../components/Container";
 import useGetAllDoctors from "../../hooks/useGetAllDoctors";
 import Edit from "../../icons/Edit";
 import Delete from "../../icons/Delete";
+import axios from "axios";
 
 const AllDoctors = () => {
-  const { doctors } = useGetAllDoctors();
-  console.log(doctors);
+  const { doctors, refetchDoctors } = useGetAllDoctors();
+
+  const handleDelete = async (id) => {
+    const result = await axios.delete(
+      `https://hospital-server-seven.vercel.app/api/v1/doctors/${id}`
+    );
+    if (result?.data?.success) {
+      refetchDoctors();
+      alert("Doctor info deleted!");
+    }
+  };
 
   return (
     <div className="pt-4">
@@ -34,7 +44,9 @@ const AllDoctors = () => {
                 <td>{doctor?.specialization?.specialization}</td>
                 <td className="flex justify-center gap-3 py-1.5">
                   <Edit />
-                  <Delete />
+                  <span onClick={() => handleDelete(doctor?.id)}>
+                    <Delete />
+                  </span>
                 </td>
               </tr>
             </tbody>
