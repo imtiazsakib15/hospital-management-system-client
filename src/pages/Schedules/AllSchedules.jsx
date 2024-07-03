@@ -2,9 +2,20 @@ import Container from "../../components/Container";
 import useGetAllSchedules from "../../hooks/useGetAllSchedules";
 import Edit from "../../icons/Edit";
 import Delete from "../../icons/Delete";
+import axios from "axios";
 
 const AllSchedules = () => {
-  const { schedules } = useGetAllSchedules();
+  const { schedules, refetchSchedules } = useGetAllSchedules();
+
+  const handleDelete = async (id) => {
+    const result = await axios.delete(
+      `https://hospital-server-seven.vercel.app/api/v1/schedules/${id}`
+    );
+    if (result?.data?.success) {
+      refetchSchedules();
+      alert("Schedule info deleted!");
+    }
+  };
 
   return (
     <div className="pt-4">
@@ -35,7 +46,7 @@ const AllSchedules = () => {
                   <span>
                     <Edit />
                   </span>
-                  <span>
+                  <span onClick={() => handleDelete(schedule?.id)}>
                     <Delete />
                   </span>
                 </td>
