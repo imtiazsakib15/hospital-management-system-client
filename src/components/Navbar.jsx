@@ -6,7 +6,8 @@ const Navbar = () => {
       <Link to="/patients">Patients</Link>
       <Link to="/doctors">Doctors</Link>
       <Link to="/hospitals">Hospitals</Link>
-      <Link to="/specializations">Specializations</Link>
+      {/* <Link to="/specializations">Specializations</Link> */}
+      <Link to="/schedules">Schedules</Link>
     </div>
   );
 };
