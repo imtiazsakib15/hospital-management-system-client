@@ -11,6 +11,7 @@ import UpdateSpecialization from "../pages/specializations/UpdateSpecialization"
 import UpdateDoctor from "../pages/doctors/UpdateDoctor";
 import Schedules from "../pages/Schedules/Schedules";
 import UpdateSchedule from "../pages/Schedules/UpdateSchedule";
+import Appointments from "../pages/appointments/Appointments";
 
 export const router = createBrowserRouter([
   {
@@ -60,6 +61,10 @@ export const router = createBrowserRouter([
       {
         path: "/schedules/:id",
         element: <UpdateSchedule />,
+      },
+      {
+        path: "/appointments",
+        element: <Appointments />,
       },
     ],
   },

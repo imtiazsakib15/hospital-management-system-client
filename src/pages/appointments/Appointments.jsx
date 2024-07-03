@@ -3,38 +3,64 @@ import axios from "axios";
 import useGetAllDoctors from "../../hooks/useGetAllDoctors";
 import useGetAllHospitals from "../../hooks/useGetAllHospitals";
 import useGetAllSpecializations from "../../hooks/useGetAllSpecializations";
-import useGetAllSchedules from "../../hooks/useGetAllSchedules";
-import AllSchedules from "./AllSchedules";
+import { useEffect, useState } from "react";
+// import useGetAllAppointments from "../../hooks/useGetAllAppointments";
+// import AllAppointments from "./AllAppointments";
 
-const Schedules = () => {
+const Appointments = () => {
   const { doctors } = useGetAllDoctors();
   const { hospitals } = useGetAllHospitals();
   const { specializations } = useGetAllSpecializations();
-  const { refetchSchedules } = useGetAllSchedules();
+  // const { refetchAppointments } = useGetAllAppointments();
+  const [time, setTime] = useState();
+  const [appointmentDetails, setAppointmentDetails] = useState({
+    hospital: "",
+    specialization: "",
+    doctor: "",
+    date: new Date().toLocaleDateString(),
+  });
 
-  const addNewSchedule = useMutation({
-    mutationFn: (newSchedule) => {
+  const addNewAppointment = useMutation({
+    mutationFn: (newAppointment) => {
       return axios.post(
-        "https://hospital-server-seven.vercel.app/api/v1/schedules/create-schedule",
-        newSchedule
+        "https://hospital-server-seven.vercel.app/api/v1/appointments/create-appointment",
+        newAppointment
       );
     },
   });
 
+  const handleChange = (e) => {
+    e.preventDefault();
+    setAppointmentDetails({
+      ...appointmentDetails,
+      [e.target.name]: e.target.value,
+    });
+    // console.log(appointmentDetails);
+  };
+
+  useEffect(() => {
+    fetch(
+      `https://hospital-server-seven.vercel.app/api/v1/schedules/appointment?hospital=${appointmentDetails?.hospital}&specialization=${appointmentDetails?.specialization}&doctor=${appointmentDetails?.doctor}&date=${appointmentDetails?.date}`
+    )
+      .then((res) => res.json())
+      .then((data) => setTime(data?.data?.time));
+  }, [appointmentDetails]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!time) return;
     const formData = new FormData(e.target);
-    const schedule = Object.fromEntries(formData);
-    schedule.date = new Date().toLocaleDateString();
+    const appointment = Object.fromEntries(formData);
 
-    addNewSchedule.mutate(
-      { schedule },
+    addNewAppointment.mutate(
+      { appointment },
       {
         onSuccess: async (result) => {
           if (result?.data?.success) {
-            await refetchSchedules();
+            // await refetchAppointments();
             e.target.reset();
-            alert("Schedule info saved!");
+            setTime();
+            alert("Appointment info saved!");
           }
         },
       }
@@ -43,28 +69,22 @@ const Schedules = () => {
 
   return (
     <div className="py-6">
-      <h1 className="text-3xl font-bold text-center">Create Doctor Schedule</h1>
+      <h1 className="text-3xl font-bold text-center">Doctor Appointment</h1>
       <form onSubmit={handleSubmit} className="w-96 mx-auto py-6 space-y-3">
         <div className="grid grid-cols-3 items-center">
-          <label htmlFor="doctor">Doctor:</label>
-          <select
+          <label htmlFor="patientId">Patient ID:</label>
+          <input
             className="border col-span-2 px-2 py-1"
-            name="doctor"
-            id="doctor"
-            required
-          >
-            <option></option>
-            {doctors?.map((doctor) => (
-              <option key={doctor._id} value={doctor._id}>
-                {doctor.name}
-              </option>
-            ))}
-          </select>
+            type="number"
+            name="patientId"
+            id="patientId"
+          />
         </div>
 
         <div className="grid grid-cols-3 items-center">
           <label htmlFor="hospital">Hospital:</label>
           <select
+            onChange={handleChange}
             className="border col-span-2 px-2 py-1"
             name="hospital"
             id="hospital"
@@ -82,6 +102,7 @@ const Schedules = () => {
         <div className="grid grid-cols-3 items-center">
           <label htmlFor="specialization">Specialized At:</label>
           <select
+            onChange={handleChange}
             className="border col-span-2 px-2 py-1"
             name="specialization"
             id="specialization"
@@ -97,27 +118,38 @@ const Schedules = () => {
         </div>
 
         <div className="grid grid-cols-3 items-center pb-3">
-          <label htmlFor="time">Time:</label>
-          <input
+          <label htmlFor="doctor">Doctor:</label>
+          <select
+            onChange={handleChange}
             className="border col-span-2 px-2 py-1"
-            type="time"
-            name="time"
-            id="time"
+            name="doctor"
+            id="doctor"
             required
-          />
+          >
+            <option></option>
+            {doctors?.map((doctor) => (
+              <option key={doctor._id} value={doctor._id}>
+                {doctor.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <h5 className="font-medium">Today at - {time || "N/A"}</h5>
         </div>
 
         <button
           className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium"
           type="submit"
         >
-          Create Schedule
+          Submit Appointment
         </button>
       </form>
 
-      <AllSchedules />
+      {/* <AllAppointments /> */}
     </div>
   );
 };
 
-export default Schedules;
+export default Appointments;
