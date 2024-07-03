@@ -3,11 +3,14 @@ import axios from "axios";
 import useGetAllDoctors from "../../hooks/useGetAllDoctors";
 import useGetAllHospitals from "../../hooks/useGetAllHospitals";
 import useGetAllSpecializations from "../../hooks/useGetAllSpecializations";
+import useGetAllSchedules from "../../hooks/useGetAllSchedules";
+import AllSchedules from "./AllSchedules";
 
 const Schedules = () => {
   const { doctors } = useGetAllDoctors();
   const { hospitals } = useGetAllHospitals();
   const { specializations } = useGetAllSpecializations();
+  const { refetchSchedules } = useGetAllSchedules();
 
   const addNewSchedule = useMutation({
     mutationFn: (newSchedule) => {
@@ -28,6 +31,7 @@ const Schedules = () => {
       {
         onSuccess: async (result) => {
           if (result?.data?.success) {
+            await refetchSchedules();
             e.target.reset();
             alert("Schedule info saved!");
           }
@@ -109,6 +113,8 @@ const Schedules = () => {
           Create Schedule
         </button>
       </form>
+
+      <AllSchedules />
     </div>
   );
 };
