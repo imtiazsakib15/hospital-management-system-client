@@ -3,9 +3,11 @@ import useGetAllSchedules from "../../hooks/useGetAllSchedules";
 import Edit from "../../icons/Edit";
 import Delete from "../../icons/Delete";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AllSchedules = () => {
   const { schedules, refetchSchedules } = useGetAllSchedules();
+  const navigate = useNavigate();
 
   const handleDelete = async (id) => {
     const result = await axios.delete(
@@ -43,7 +45,7 @@ const AllSchedules = () => {
                 <td>{schedule?.date}</td>
                 <td>{schedule?.time}</td>
                 <td className="flex justify-center gap-3 py-1.5">
-                  <span>
+                  <span onClick={() => navigate(`/schedules/${schedule?.id}`)}>
                     <Edit />
                   </span>
                   <span onClick={() => handleDelete(schedule?.id)}>

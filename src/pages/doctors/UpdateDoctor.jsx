@@ -49,7 +49,7 @@ const UpdateDoctor = () => {
       }
     );
   };
-  console.log(doctor?.specialization?._id);
+
   return (
     <div className="py-6">
       <h1 className="text-3xl font-bold text-center">Update Doctor Details</h1>

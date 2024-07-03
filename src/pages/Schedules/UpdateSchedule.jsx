@@ -1,39 +1,51 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import useGetAllDoctors from "../../hooks/useGetAllDoctors";
+import { useNavigate, useParams } from "react-router-dom";
+import useGetAllSchedules from "../../hooks/useGetAllSchedules";
 import useGetAllHospitals from "../../hooks/useGetAllHospitals";
 import useGetAllSpecializations from "../../hooks/useGetAllSpecializations";
-import useGetAllSchedules from "../../hooks/useGetAllSchedules";
-import AllSchedules from "./AllSchedules";
+import useGetAllDoctors from "../../hooks/useGetAllDoctors";
 
-const Schedules = () => {
+const UpdateSchedule = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { refetchSchedules } = useGetAllSchedules();
   const { doctors } = useGetAllDoctors();
   const { hospitals } = useGetAllHospitals();
   const { specializations } = useGetAllSpecializations();
-  const { refetchSchedules } = useGetAllSchedules();
 
-  const addNewSchedule = useMutation({
-    mutationFn: (newSchedule) => {
-      return axios.post(
-        "https://hospital-server-seven.vercel.app/api/v1/schedules/create-schedule",
-        newSchedule
+  const { data: scheduleQuery, refetch: refetchSingleSchedule } = useQuery({
+    queryKey: ["singleSchedule"],
+    queryFn: async () =>
+      await axios.get(
+        `https://hospital-server-seven.vercel.app/api/v1/schedules/${id}`
+      ),
+  });
+  const updateSchedule = useMutation({
+    mutationFn: (updateSchedule) => {
+      return axios.patch(
+        `https://hospital-server-seven.vercel.app/api/v1/schedules/${id}`,
+        updateSchedule
       );
     },
   });
+
+  const schedule = scheduleQuery?.data?.data;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const schedule = Object.fromEntries(formData);
 
-    addNewSchedule.mutate(
+    updateSchedule.mutate(
       { schedule },
       {
         onSuccess: async (result) => {
           if (result?.data?.success) {
             await refetchSchedules();
-            e.target.reset();
-            alert("Schedule info saved!");
+            await refetchSingleSchedule();
+            navigate("/schedules");
+            alert("Schedule info updated!");
           }
         },
       }
@@ -42,7 +54,9 @@ const Schedules = () => {
 
   return (
     <div className="py-6">
-      <h1 className="text-3xl font-bold text-center">Create Doctor Schedule</h1>
+      <h1 className="text-3xl font-bold text-center">
+        Update Schedule Details
+      </h1>
       <form onSubmit={handleSubmit} className="w-96 mx-auto py-6 space-y-3">
         <div className="grid grid-cols-3 items-center">
           <label htmlFor="doctor">Doctor:</label>
@@ -50,6 +64,7 @@ const Schedules = () => {
             className="border col-span-2 px-2 py-1"
             name="doctor"
             id="doctor"
+            defaultValue={schedule?.doctor?._id || ""}
             required
           >
             <option></option>
@@ -67,6 +82,7 @@ const Schedules = () => {
             className="border col-span-2 px-2 py-1"
             name="hospital"
             id="hospital"
+            defaultValue={schedule?.hospital?._id || ""}
             required
           >
             <option></option>
@@ -84,6 +100,7 @@ const Schedules = () => {
             className="border col-span-2 px-2 py-1"
             name="specialization"
             id="specialization"
+            defaultValue={schedule?.specialization?._id || ""}
             required
           >
             <option></option>
@@ -110,13 +127,11 @@ const Schedules = () => {
           className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium"
           type="submit"
         >
-          Create Schedule
+          Update Schedule
         </button>
       </form>
-
-      <AllSchedules />
     </div>
   );
 };
 
-export default Schedules;
+export default UpdateSchedule;

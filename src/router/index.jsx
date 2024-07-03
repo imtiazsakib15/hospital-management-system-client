@@ -10,6 +10,7 @@ import UpdateHospital from "../pages/hospitals/UpdateHospital";
 import UpdateSpecialization from "../pages/specializations/UpdateSpecialization";
 import UpdateDoctor from "../pages/doctors/UpdateDoctor";
 import Schedules from "../pages/Schedules/Schedules";
+import UpdateSchedule from "../pages/Schedules/UpdateSchedule";
 
 export const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ export const router = createBrowserRouter([
       {
         path: "/schedules",
         element: <Schedules />,
+      },
+      {
+        path: "/schedules/:id",
+        element: <UpdateSchedule />,
       },
     ],
   },
