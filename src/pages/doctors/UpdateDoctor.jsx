@@ -1,6 +1,6 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import useGetAllDoctors from "../../hooks/useGetAllDoctors";
 import useGetAllHospitals from "../../hooks/useGetAllHospitals";
 import useGetAllSpecializations from "../../hooks/useGetAllSpecializations";
@@ -11,14 +11,8 @@ const UpdateDoctor = () => {
   const { refetchDoctors } = useGetAllDoctors();
   const { hospitals } = useGetAllHospitals();
   const { specializations } = useGetAllSpecializations();
+  const { data: doctor } = useLoaderData();
 
-  const { data: doctorQuery, refetch: refetchSingleDoctor } = useQuery({
-    queryKey: ["singleDoctor"],
-    queryFn: async () =>
-      await axios.get(
-        `https://hospital-server-seven.vercel.app/api/v1/doctors/${id}`
-      ),
-  });
   const updateDoctor = useMutation({
     mutationFn: (updateDoctor) => {
       return axios.patch(
@@ -27,8 +21,6 @@ const UpdateDoctor = () => {
       );
     },
   });
-
-  const doctor = doctorQuery?.data?.data;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,7 +33,6 @@ const UpdateDoctor = () => {
         onSuccess: async (result) => {
           if (result?.data?.success) {
             await refetchDoctors();
-            await refetchSingleDoctor();
             navigate("/doctors");
             alert("Doctor info updated!");
           }
