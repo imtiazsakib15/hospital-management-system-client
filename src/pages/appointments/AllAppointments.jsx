@@ -2,9 +2,22 @@ import Container from "../../components/Container";
 import useGetAllAppointments from "../../hooks/useGetAllAppointments";
 import Edit from "../../icons/Edit";
 import Delete from "../../icons/Delete";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AllAppointments = () => {
-  const { appointments } = useGetAllAppointments();
+  const { appointments, refetchAppointments } = useGetAllAppointments();
+  const navigate = useNavigate();
+
+  const handleDelete = async (id) => {
+    const result = await axios.delete(
+      `https://hospital-server-seven.vercel.app/api/v1/appointments/${id}`
+    );
+    if (result?.data?.success) {
+      refetchAppointments();
+      alert("Appointment info deleted!");
+    }
+  };
 
   return (
     <div className="pt-4">
@@ -37,7 +50,7 @@ const AllAppointments = () => {
                   <span>
                     <Edit />
                   </span>
-                  <span>
+                  <span onClick={() => handleDelete(appointment?.id)}>
                     <Delete />
                   </span>
                 </td>
