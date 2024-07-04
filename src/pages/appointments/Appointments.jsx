@@ -4,14 +4,14 @@ import useGetAllDoctors from "../../hooks/useGetAllDoctors";
 import useGetAllHospitals from "../../hooks/useGetAllHospitals";
 import useGetAllSpecializations from "../../hooks/useGetAllSpecializations";
 import { useEffect, useState } from "react";
-// import useGetAllAppointments from "../../hooks/useGetAllAppointments";
-// import AllAppointments from "./AllAppointments";
+import useGetAllAppointments from "../../hooks/useGetAllAppointments";
+import AllAppointments from "./AllAppointments";
 
 const Appointments = () => {
   const { doctors } = useGetAllDoctors();
   const { hospitals } = useGetAllHospitals();
   const { specializations } = useGetAllSpecializations();
-  // const { refetchAppointments } = useGetAllAppointments();
+  const { refetchAppointments } = useGetAllAppointments();
   const [time, setTime] = useState();
   const [appointmentDetails, setAppointmentDetails] = useState({
     hospital: "",
@@ -35,7 +35,6 @@ const Appointments = () => {
       ...appointmentDetails,
       [e.target.name]: e.target.value,
     });
-    // console.log(appointmentDetails);
   };
 
   useEffect(() => {
@@ -51,13 +50,14 @@ const Appointments = () => {
     if (!time) return;
     const formData = new FormData(e.target);
     const appointment = Object.fromEntries(formData);
+    appointment.time = time;
 
     addNewAppointment.mutate(
       { appointment },
       {
         onSuccess: async (result) => {
           if (result?.data?.success) {
-            // await refetchAppointments();
+            await refetchAppointments();
             e.target.reset();
             setTime();
             alert("Appointment info saved!");
@@ -78,6 +78,7 @@ const Appointments = () => {
             type="number"
             name="patientId"
             id="patientId"
+            min={1}
           />
         </div>
 
@@ -147,7 +148,7 @@ const Appointments = () => {
         </button>
       </form>
 
-      {/* <AllAppointments /> */}
+      <AllAppointments />
     </div>
   );
 };
