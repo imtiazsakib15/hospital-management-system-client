@@ -1,6 +1,6 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import useGetAllSchedules from "../../hooks/useGetAllSchedules";
 import useGetAllHospitals from "../../hooks/useGetAllHospitals";
 import useGetAllSpecializations from "../../hooks/useGetAllSpecializations";
@@ -13,14 +13,8 @@ const UpdateSchedule = () => {
   const { doctors } = useGetAllDoctors();
   const { hospitals } = useGetAllHospitals();
   const { specializations } = useGetAllSpecializations();
+  const { data: schedule } = useLoaderData();
 
-  const { data: scheduleQuery, refetch: refetchSingleSchedule } = useQuery({
-    queryKey: ["singleSchedule"],
-    queryFn: async () =>
-      await axios.get(
-        `https://hospital-server-seven.vercel.app/api/v1/schedules/${id}`
-      ),
-  });
   const updateSchedule = useMutation({
     mutationFn: (updateSchedule) => {
       return axios.patch(
@@ -29,8 +23,6 @@ const UpdateSchedule = () => {
       );
     },
   });
-
-  const schedule = scheduleQuery?.data?.data;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,7 +35,6 @@ const UpdateSchedule = () => {
         onSuccess: async (result) => {
           if (result?.data?.success) {
             await refetchSchedules();
-            await refetchSingleSchedule();
             navigate("/schedules");
             alert("Schedule info updated!");
           }
@@ -119,6 +110,7 @@ const UpdateSchedule = () => {
             type="time"
             name="time"
             id="time"
+            defaultValue={schedule?.time || ""}
             required
           />
         </div>

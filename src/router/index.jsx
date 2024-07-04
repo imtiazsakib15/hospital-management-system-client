@@ -66,6 +66,10 @@ export const router = createBrowserRouter([
       {
         path: "/schedules/:id",
         element: <UpdateSchedule />,
+        loader: ({ params }) =>
+          fetch(
+            `https://hospital-server-seven.vercel.app/api/v1/schedules/${params?.id}`
+          ),
       },
       {
         path: "/appointments",
