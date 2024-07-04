@@ -92,11 +92,10 @@ const UpdateAppointment = () => {
             className="border col-span-2 px-2 py-1"
             name="hospital"
             id="hospital"
+            defaultValue={appointment?.hospital?._id || ""}
             required
           >
-            <option value={appointment?.hospital?._id}>
-              {appointment?.hospital?.hospitalName}
-            </option>
+            <option></option>
             {hospitals?.map((hospital) => (
               <option key={hospital._id} value={hospital._id}>
                 {hospital.hospitalName}
@@ -112,11 +111,10 @@ const UpdateAppointment = () => {
             className="border col-span-2 px-2 py-1"
             name="specialization"
             id="specialization"
+            defaultValue={appointment?.specialization?._id || ""}
             required
           >
-            <option value={appointment?.specialization?._id}>
-              {appointment?.specialization?.specialization}
-            </option>
+            <option></option>
             {specializations?.map((specialization) => (
               <option key={specialization._id} value={specialization._id}>
                 {specialization.specialization}
@@ -132,11 +130,10 @@ const UpdateAppointment = () => {
             className="border col-span-2 px-2 py-1"
             name="doctor"
             id="doctor"
+            defaultValue={appointment?.doctor?._id || ""}
             required
           >
-            <option value={appointment?.doctor?._id}>
-              {appointment?.doctor?.name}
-            </option>
+            <option></option>
             {doctors?.map((doctor) => (
               <option key={doctor._id} value={doctor._id}>
                 {doctor.name}
