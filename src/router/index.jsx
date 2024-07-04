@@ -12,6 +12,7 @@ import UpdateDoctor from "../pages/doctors/UpdateDoctor";
 import Schedules from "../pages/Schedules/Schedules";
 import UpdateSchedule from "../pages/Schedules/UpdateSchedule";
 import Appointments from "../pages/appointments/Appointments";
+import UpdateAppointment from "../pages/appointments/UpdateAppointment";
 
 export const router = createBrowserRouter([
   {
@@ -65,6 +66,14 @@ export const router = createBrowserRouter([
       {
         path: "/appointments",
         element: <Appointments />,
+      },
+      {
+        path: "/appointments/:id",
+        element: <UpdateAppointment />,
+        loader: ({ params }) =>
+          fetch(
+            `https://hospital-server-seven.vercel.app/api/v1/appointments/${params.id}`
+          ),
       },
     ],
   },

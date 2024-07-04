@@ -47,7 +47,9 @@ const AllAppointments = () => {
                 <td>{appointment?.date}</td>
                 <td>{appointment?.time}</td>
                 <td className="flex justify-center gap-3 py-1.5">
-                  <span>
+                  <span
+                    onClick={() => navigate(`/appointments/${appointment?.id}`)}
+                  >
                     <Edit />
                   </span>
                   <span onClick={() => handleDelete(appointment?.id)}>
